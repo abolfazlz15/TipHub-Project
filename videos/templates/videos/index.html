@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block contact %}
+<main>
+
+    <section class="py-5">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h2 class="title-section">تازه ترین ویدیو ها</h2>
+                <a href="{% url 'videos:all-video' %}" class="btn custom-btn">
+                    نمایش همه
+                </a>
+            </div>
+            <div class="row">
+                <!-- item -->
+
+                {% for video in videos %}
+                <div class="col-md-6 col-lg-4 my-2">
+                    <div class="custom-bg">
+                        <div class="video-card">
+                            <a href="{{ video.get_absolute_url }}" class="position-relative d-block ">
+                                <img src="{{ video.cover_video.url }}" alt="" class="img-fluid w-100 h-100">
+                                <div class="video-play-btn">
+                                    <i class="fa fa-play"></i>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between video-category-time">
+                                    <h6 class="">{{ video.category.first }}</h6>
+                                    <span class="vid-time">{{ video.video_time }}</span>
+                                    <!-- <span class="vid-time">5:25</span> -->
+                                </div>
+                                <div class="video-card-details">
+                                    <div>
+                                        <span>{{ video.view.all.count }}</span>
+                                        <i class="fa fa-eye"></i>
+                                    </div>
+                                    <div>
+                                        <span>{{ video.likes.count }}</span>
+                                        <i class="fa fa-heart"></i>
+                                    </div>
+                                    <div>
+                                        <span>{{ video.comments.count }}</span>
+                                        <i class="fa fa-comment"></i>
+                                    </div>
+                                </div>
+                                <div class="article-overlay"></div>
+                            </a>
+
+                        </div>
+                        <a href="{{ video.get_absolute_url }}">
+                            <h5 class="video-card-title m-2">
+                                {{ video.title }}
+                            </h5>
+                        </a>
+                        <div class="my-3 pb-3 mx-2">
+                            <i class="fa fa-user  ml-1 "></i>
+                            <span>{{ video.teacher.user.full_name }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h2 class="title-section">تازه ترین ویدیوها </h2>
+                <a href="{% url 'videos:all-video' %}" class="btn custom-btn">
+                    نمایش همه
+                </a>
+            </div>
+            <div class="row">
+                {% for video in top_videos %}
+                <!-- item -->
+                <div class="col-md-6 col-lg-4 my-2">
+                    <div class="custom-bg">
+                        <div class="video-card">
+                            <a href="{{ video.get_absolute_url }}" class="position-relative d-block ">
+                                <img src="{{ video.cover_video.url }}" alt="" class="img-fluid w-100 h-100">
+                                <div class="video-play-btn">
+                                    <i class="fa fa-play"></i>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between video-category-time">
+                                    <h6 class="">{{ video.category.first }}</h6>
+                                    <span class="vid-time">{{ video.video_time }}</span>
+                                </div>
+                                <div class="video-card-details">
+                                    <div>
+                                        <span>{{ video.view.all.count }}</span>
+                                        <i class="fa fa-eye"></i>
+                                    </div>
+                                    <div>
+                                        <span>{{ video.likes.count }}</span>
+                                        <i class="fa fa-heart"></i>
+                                    </div>
+                                    <div>
+                                        <span>{{  video.comments.count}}</span>
+                                        <i class="fa fa-comment"></i>
+                                    </div>
+                                </div>
+                                <div class="article-overlay"></div>
+                            </a>
+
+                        </div>
+                        <a href="{{ video.get_absolute_url }}">
+                            <h5 class="video-card-title m-2"> {{ video.title }} </h5>
+                        </a>
+                        <div class="my-3 pb-3 mx-2">
+                            <i class="fa fa-user  ml-1 "></i>
+                            <span>{{ video.teacher.user.full_name }}</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- end item -->
+                {% endfor %}
+
+
+
+
+            </div>
+        </div>
+    </section>
+
+
+
+</main>
+
+{% endblock contact %}

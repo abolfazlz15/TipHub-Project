@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block contact %}
+<main>
+
+    <section class="py-5">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                
+                    {% if videos %}
+                <h2 class="title-section">همه ویدیوها</h2>
+                {% else %}
+                <h2 class="title-section">ویدویی یافت نشد</h2>
+                {% endif %}
+                    
+
+            </div>
+            <div class="row">
+                <!-- item -->
+                
+                {% for video in videos %}
+                <div class="col-md-6 col-lg-4 my-2">
+                    <div class="custom-bg">
+                        <div class="video-card">
+                            <a href="{{ video.video.get_absolute_url }}" class="position-relative d-block ">
+                                <img src="{{ video.video.cover_video.url }}" alt="" class="img-fluid w-100 h-100">
+                                <div class="video-play-btn">
+                                    <i class="fa fa-play"></i>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between video-category-time">
+                                    <h6 class=""> {{ video.video.category.first }} </h6>
+                                    <span class="vid-time">{{ video.video.video_time }}</span>
+                                </div>
+                                <div class="video-card-details">
+                                    <div>
+                                        <span>{{ video.video.view.all.count }}</span>
+                                        <i class="fa fa-eye"></i>
+                                    </div>
+                                    <div>
+                                        <span>{{ video.video.likes.count }}</span>
+                                        <i class="fa fa-heart"></i>
+                                    </div>
+                                    <div>
+                                        <span>{{ video.video.comments.count }}</span>
+                                        <i class="fa fa-comment"></i>
+                                    </div>
+                                </div>
+                                <div class="article-overlay"></div>
+                            </a>
+
+                        </div>
+                        <a href="{{ video.video.get_absolute_url }}">
+                            <h5 class="video-card-title m-2">{{ video.video.title }}</h5>
+                        </a>
+                        <div class="my-3 pb-3 mx-2">
+                            <i class="fa fa-user  ml-1 "></i>
+                            <span>{{ video.video.teacher.user.full_name }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                    
+
+                <!-- end item -->
+
+            </div>
+            {% if page_obj.has_other_pages %}
+                <div class="d-flex align-items-center justify-content-center mb-3 pagination">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}" class="mx-1"><i class="fa fa-chevron-right"></i></a>
+                        {% if page_obj.number > 3 %}
+                            <a href="?page=1" class="mx-1">1</a>
+                        {% if page_obj.number > 4 %}
+                        <span>...</span>
+                        {% endif %}
+                        {% endif %}
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <a href="?page={{ num }}" class="active mx-1">{{ num }}</a>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <a href="?page={{ num }}" class="mx-1">{{ num }}</a> 
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        {% if page_obj.number < page_obj.paginator.num_pages|add:'-3' %}
+                        <span>...</span>
+                        <a href="?page={{ page_obj.paginator.num_pages }}" class="mx-1">{{ page_obj.paginator.num_pages }}</a>
+                        {% elif page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
+                        <a href="?page={{ page_obj.paginator.num_pages }}" class="mx-1">{{ page_obj.paginator.num_pages }}</a>
+                        {% endif %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="mx-1"><i class="fa fa-chevron-left"></i></a>
+                    {% endif %}
+
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+</main>
+{% endblock contact %}

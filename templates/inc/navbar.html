@@ -1,0 +1,13 @@
+<nav class="nav-menu nav-menu-pc  d-none d-md-flex px-4" id="navbar">
+    {% for category in categories %}
+        <li id="" class="mx-3 menu-item"><a href="{% url 'videos:category-video' category.id %}" class="nav-menu-item ">{{ category }}</a>
+        <ul class="sub-menu">
+            {% for child in category.parents.all %}
+            <a href="{% url 'videos:category-video' child.id %}">{{ child }}</a>
+            {% endfor %}     
+
+        </ul>
+    {% endfor %}
+    </li>
+
+</nav>

@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block header_ref %}
+    <style>
+        .profile-image-div {
+            position: relative;
+        }
+
+        .profile-image-div i {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            background-color: rgba(128, 128, 128, 0.3);
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 100%;
+            cursor: pointer;
+            font-size: 16pt;
+        }
+    </style>
+{% endblock %}
+
+{% block contact %}
+    <main>
+
+
+        <section class="py-5">
+            <div class="container">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-sm-9 col-md-11 col-lg-10">
+                        <div class="user-panel custom-bg">
+                            <form action="" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="user-panel-box">
+                                    {% for error in form.non_field_errors %}
+                                        <p class="alert alert-danger">{{ error }}</p>
+                                    {% endfor %}
+                                    <div class="user-panel-profile">
+                                        <div class="profile-image-div">
+                                            {% if request.user.avatar %}
+                                                <img id="preview-image" src="{{ request.user.avatar.url }}" alt="">
+                                            {% else %}
+                                                <img id="preview-image" src="{% static 'image/sutdent-prof.png' %}"
+                                                     alt="">
+                                            {% endif %}
+                                            <i id="image_change" class="fa fa-camera"></i>
+                                        </div>
+                                    </div>
+                                    <div class="change-profile-btn">
+                                        <!-- <button class="btn custom-btn">تغییر عکس پروفایل</button> -->
+                                        <!-- <input class="btn custom-btn"  type="file" src="{% static 'image/member8.jpg' %}" alt="تغییر عکس پروفایل"> -->
+                                        {{ form.avatar }}
+                                    </div>
+                                    <!-- item -->
+                                    <div class="user-panel-field">
+                                        <i class="fa fa-user"></i>
+                                        {{ form.full_name }}
+                                    </div>
+                                    <!-- item -->
+                                    <div class="user-panel-field">
+                                        <i class="fa fa-envelope"></i>
+
+                                        {{ form.email }}
+                                    </div>
+
+
+                                    <!-- item -->
+                                    <!-- <div class="user-panel-field">
+                                        <i class="fa fa-phone"></i>
+
+                                        {{ form.phone_number }}
+                                    </div> -->
+                                    <!-- item -->
+
+                                    <div class="user-panel-field">
+                                        <i class="fa fa-user-circle"></i>
+
+                                        {{ form.username }}
+                                    </div>
+                                    {% for error in form.username.errors %}
+                                        <p class="alert alert-danger">{{ error }}</p>
+                                    {% endfor %}
+
+                                    {% for error in form.full_name.errors %}
+                                        <p class="alert alert-danger">{{ error }}</p>
+                                    {% endfor %}
+
+                                    {% for error in form.avatar.errors %}
+                                        <p class="alert alert-danger">{{ error }}</p>
+                                    {% endfor %}
+
+                                    {% for error in form.email.errors %}
+                                        <p class="alert alert-danger">{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="d-flex justify-content-center mt-3 ">
+                                    <button type="submit" class="btn custom-btn w-50"><a
+                                            href="{% url 'accounts:change-password' %}">تغییر واژه گذاره</a></button>
+                                </div>
+                                <div class="d-flex justify-content-center mt-3 ">
+                                    <button type="submit" class="btn custom-btn w-50">اعمال تغییرات</button>
+                                </div>
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+    </main>
+{% endblock contact %}
+{% block footer_ref %}
+    <script>
+        document.getElementById('image_change').onclick = function () {
+            document.getElementById('select-image').click();
+        };
+
+        document.getElementById("select-image").addEventListener("change", function () {
+            imgPreview = document.getElementById('preview-image')
+            const files = document.getElementById('select-image').files[0];
+            if (files) {
+                const fileReader = new FileReader();
+                fileReader.readAsDataURL(files);
+                fileReader.addEventListener("load", function () {
+                    imgPreview.style.display = "block";
+                    imgPreview.src = this.result
+                });
+            }
+        })
+    </script>
+{% endblock %}

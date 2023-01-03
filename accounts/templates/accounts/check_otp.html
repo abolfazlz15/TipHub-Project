@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load socialaccount %}
+
+
+{% block contact %}
+
+    <main>
+        <section class="py-5">
+            <div class="container">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-sm-9 col-md-7 col-lg-5">
+                        <div class="custom-bg p-2">
+                            {% if messages %}
+                            <ul class="messages">
+                                {% for message in messages %}
+                                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                            <div class="my-3 text-center">کد تایید</div>
+                            <form class="" method="post">
+                                {% csrf_token %}
+                                <div class="field">
+                                    <i class="fa fa-envelope"></i>
+                                    {{ form.code }}
+                                </div>
+                                {% for error in form.code.errors %}
+                                    <p class="alert alert-danger">{{ error }}</p>
+                                {% endfor %}
+
+                                <div class="my-3">
+                                    <!-- <input type="submit" value="tset"> -->
+                                    <button class="btn custom-btn w-100">تایید کد</button>
+                                </div>
+                                <div class="pb-2 border-bottom">
+                                    
+                                    
+                                        
+                                    
+                                   
+                                        
+                                    <a href="{% if request.user.is_authenticated %} {% url 'accounts:edit-user-panel' %} {% else %} {% url 'accounts:register' %} {% endif %}" class="small">
+                                        کد تایید جدید
+                                    </a>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- <script>
+            let checkboxInput = document.querySelector('.checkbox-input')
+            let passwordInput = document.querySelector('.password-input')
+            let isHide = true
+            checkboxInput.addEventListener('click' , ()=>{
+                if(isHide){
+                    passwordInput.type = 'text'
+                    isHide = false
+                }else{
+                    passwordInput.type = 'password'
+                    isHide = true
+                }
+            })
+
+        </script> -->
+{% endblock contact %}

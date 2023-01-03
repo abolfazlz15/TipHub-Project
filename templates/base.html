@@ -1,0 +1,32 @@
+<html lang="en">
+
+<head>
+    {% include 'inc/head.html' %}
+    <title>
+        {% block title %}
+
+        {% endblock title %}
+    </title>
+    
+    {% block header_ref %}
+        
+    {% endblock header_ref %}
+        
+</head>
+
+<body>
+    {% include 'inc/header.html' %}
+    {% include 'inc/navbar.html' %}
+
+
+    {% block contact %}
+
+    {% endblock contact %}
+
+
+    {% include 'inc/footer.html' %}
+    {% include 'inc/footer_references.html' %}
+    {% block footer_ref %}{% endblock %}
+</body>
+
+</html>

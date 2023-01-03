@@ -1,0 +1,306 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block contact %}
+
+    <main>
+
+        <section class="py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div>
+                            <!-- video -->
+                            <div class="video-player-box">
+                                <div class="video-icon">
+                                    <div class="btn video-btn" onclick="playvideo()" id="videobtn">
+                                        <img src="{% static 'image/play-video-btn.png' %}" alt="">
+                                    </div>
+                                </div>
+                                <div class="video">
+                                    <video width="100%" id="myVideo" autoplay>
+                                        <source src="{{ video.video_file.url }}" type="video/mp4">
+                                    </video>
+                                    <img src="{{ video.cover_video.url }}" width="100%" height="100%"
+                                         class="position-absolute video-poster" alt="">
+
+                                    <div class="video-overlay"></div>
+                                    <div class="video-description px-2 text-white">
+
+
+                                        {% if video.video_time %}
+                                            <p> {{ video.video_time }} دقیقه</p>
+                                        {% else %}
+                                            <p>برای این ویدیو تایمی ثبت نشده است</p>
+                                        {% endif %}
+                                            
+                                    </div>
+                                    <h5 class="close-btn" onclick="stopPlayer()">X</h5>
+                                </div>
+                            </div>
+                            <!-- end video -->
+                            <!-- title -->
+                            <h3 class="video-title my-3">
+                                {{ video.title }}
+                            </h3>
+                            <div class="d-flex align-items-center justify-content-between border-bottom pb-3">
+                                <p class="color78">{{ video.jalaliPablish }}</p>
+                                <div class="d-flex align-items-center view-like">
+                                    <div class="mx-3">
+                                        <span>{{ video.view.all.count }}</span>
+                                        <i class="fa fa-eye"></i>
+                                    </div>
+                                    <div>
+                                        <span id="likes-count">{{ video.likes.all.count }}</span>
+                                        {% if is_liked %}
+                                            <button id="like-btn"><i id="icon-like" class="fa fa-heart liked"></i>
+                                            </button>
+                                        {% else %}
+                                            <button id="like-btn"><i id="icon-like" class="fa fa-heart-o"></i></button>
+                                        {% endif %}
+
+
+                                        <!-- <i class="fa fa-heart" aria-hidden="true"></i> -->
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- description -->
+                            <div class="border-bottom pb-3">
+                                <h4 class="my-3">درباره فیلم</h4>
+                                <p class="color78">
+                                    {{ video.description }}
+                                </p>
+
+                                <div class="labels">
+                                    <h4 class="my-3">برچسب ها</h4>
+                                    <ul class="d-flex align-items-center">
+
+                                        {% for tag in video.tags.all %}
+                                            <li><a href="#" title="">#{{ tag.name }}</a></li>
+                                        {% endfor %}
+
+
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- end des -->
+
+                            <!-- comments -->
+                            <div>
+
+                                <div class="py-3">
+                                    <span>{{ video.comments.all.count }}</span>
+                                    <span>نظر</span>
+                                </div>
+
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" id="parent_id" name="parent_id">
+                                    <textarea class="w-100 p-2 comment-area" name="text" id="" cols="30" rows="10"
+                                              placeholder="دیدگاه خود را بنویسید"></textarea>
+                                    <div class="d-flex align-items-center justify-content-end pt-3">
+                                        <button class="btn custom-btn">ارسال نظر</button>
+                                    </div>
+                                </form>
+                                <!-- comment -->
+
+                                <div id="comments-list">
+                                    {% for comment in comments %}
+                                        {% if comment.parent == None %}
+                                            <div class="comment my-3 p-2 infinite-item">
+                                                <div class=" d-flex align-items-center justify-content-between">
+                                                    <div class="d-flex align-items-center justify-content-center">
+                                                        {% if comment.user.avatar %}
+                                                            <img src="{{ comment.user.avatar.url }}" alt="student"
+                                                                 class="user-profile">
+                                                        {% else %}
+                                                            <img src="{% static 'image/sutdent-prof.png' %}"
+                                                                 alt="student"
+                                                                 class="user-profile">
+
+                                                        {% endif %}
+                                                        <p class="user-name pr-2">{{ comment.user.username }}</p>
+                                                    </div>
+
+                                                    <p class="comment-date-time"> {{ comment.created_at|naturaltime }} </p>
+                                                </div>
+                                                <p class="px-4 py-2 comment-text text-justify">
+                                                    {{ comment.text }}
+                                                </p>
+
+                                                <div class="d-flex align-items-center justify-content-end reply"
+                                                     type='button'>
+                                                    <i class="fa fa-reply"></i>
+                                                    <button onclick="set_value({{ comment.id }})">پاسخ به این نظر
+                                                    </button>
+                                                    <!-- <a href=""onclick="set_value({{comment.id}})>پاسخ به این نظر</a> -->
+                                                    <!-- <p>پاسخ به این نظر</p> -->
+                                                </div>
+                                            </div>
+                                            {% for reply in comment.replies.all %}
+                                                <div class="comment my-3 p-2 comment-child infinite-item">
+                                                    <div class=" d-flex align-items-center justify-content-between">
+                                                        <div class="d-flex align-items-center justify-content-center">
+                                                            {% if reply.user.avatar %}
+                                                                <img src="{{ reply.user.avatar.url }}" alt="student"
+                                                                     class="user-profile">
+                                                            {% else %}
+                                                                <img src="{% static 'image/sutdent-prof.png' %}"
+                                                                     alt="student"
+                                                                     class="user-profile">
+
+                                                            {% endif %}
+                                                            <p class="user-name pr-2">{{ reply.user.username }}</p>
+                                                        </div>
+
+                                                        <p class="comment-date-time">{{ reply.created_at|naturaltime }}</p>
+                                                    </div>
+                                                    <p class="px-4 py-2 comment-text text-justify">{{ reply.text }}</p>
+
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <!-- end comments -->
+                            {% if comments.has_other_pages %}
+                                <a class="d-none infinite-more-link" href="?page={{ comments.next_page_number }}">
+                                    <i class="fa fa-chevron-left"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!-- main -->
+                    <!-- side -->
+                    <aside class="col-md-4 ">
+                        <div class="custom-bg p-2 teacher-card">
+                            <div class="border-bottom py-3 text-center">
+                                <h4>درباره استاد</h4>
+                            </div>
+                            <div class="d-flex align-items-center py-3">
+
+                                {% if video.teacher.user.avatar %}
+                                    <img src="{{ video.teacher.user.avatar.url }}" alt="student"
+                                         class="teacher-profile">
+                                {% else %}
+                                    <img src="{% static 'image/sutdent-prof.png' %}" alt="student"
+                                         class="teacher-profile">
+                                {% endif %}
+
+
+                                <p class="user-name pr-2">{{ video.teacher.user.full_name }}</p>
+                            </div>
+                            <p class="color78 teacher-description py-3">{{ video.teacher.bio }}</p>
+
+                            <div class="teacher-social-media d-flex align-items-center justify-content-center flex-wrap">
+                                <a href=""> <i class="fa fa-instagram"></i></a>
+                                <a href=""> <i class="fa fa-github"></i></a>
+                                <a href=""> <i class="fa fa-linkedin"></i></a>
+                                <a href=""> <i class="fa fa-twitter"></i></a>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- end side -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+
+    <script>
+        // video-player
+        const videobtn = document.querySelector('.video-btn');
+        const video = document.querySelector('.video');
+        const videotag = document.querySelector('video')
+        const videoDescription = document.querySelector('.video-description')
+        const closeBtn = document.querySelector('.close-btn')
+        const videoPoster = document.querySelector('.video-poster')
+        const videoOverlay = document.querySelector('.video-overlay')
+
+        function stopPlayer() {
+            videobtn.style.display = "block";
+            closeBtn.style.display = 'none';
+            videoPoster.style.display = 'inline'
+            video.style.zIndex = '-1'
+            videotag.pause()
+            videotag.style.borderRadius = '20px'
+            videoDescription.style.display = 'flex'
+            videotag.controls = false
+            videotag.style.borderRadius = '15px'
+            videoOverlay.style.display = 'block'
+        };
+
+        function playvideo() {
+            videobtn.style.display = "none";
+            video.style.zIndex = '22222'
+            videotag.autoplay = true
+            videotag.play()
+            videotag.style.borderRadius = '20px'
+            videotag.controls = true
+            videoDescription.style.display = 'none'
+            closeBtn.style.display = 'block'
+            videoPoster.style.display = 'none'
+            videoOverlay.style.display = 'none'
+        }
+    </script>
+    <script>
+        function set_value(id) {
+            document.getElementById('parent_id').value = id;
+            window.location.href = '#comment'
+
+        }
+    </script>
+    <script src="https://use.fontawesome.com/96472d4340.js">
+
+    </script>
+{% endblock contact %}
+{% block footer_ref %}
+    <script>
+        $(document).ready(function () {
+            $(" #like-btn").click(function () {
+                $.ajax({
+                    url: "{% url 'videos:like' video.id %}",
+                    type: "get",
+                    success: function (data) {
+                        if (data.status === "liked") {
+                            document.getElementById("icon-like").classList = "fa fa-heart liked"
+                            document.getElementById("likes-count").innerHTML = data.count
+                            console.log(data.response);
+                        } else {
+                            document.getElementById("icon-like").classList = "fa fa-heart-o"
+                            document.getElementById("likes-count").innerHTML = data.count
+                            console.log(data.response);
+                        }
+                    }, failure: function (data) {
+                        console.log("Failed")
+                    }
+                })
+            })
+        }) </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/shortcuts/infinite.js"></script>
+    <script>
+        var infinite = new Waypoint.Infinite({
+            element: $('#comments-list')[0],
+            handler: function (direction) {
+                console.log("HERE");
+            },
+            offset: 'bottom-in-view',
+            onBeforePageLoad: function () {
+                $('.spinner-border').show();
+            },
+            onAfterPageLoad: function () {
+                $('.spinner-border').hide();
+            }
+        });
+    </script>
+
+{% endblock %}

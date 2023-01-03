@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load socialaccount %}
+
+
+{% block contact %}
+<main>
+    <section class="py-5">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="col-sm-9 col-md-7 col-lg-5">
+                    <div class="custom-bg p-2">
+
+                        <div class="my-3 text-center">ورود به حساب</div>
+                            <form class="" method="post">
+                                {% csrf_token %}
+                                <div class="field">
+                                    <i class="fa fa-envelope"></i>
+                                    {{ form.email }}
+                                </div>
+                                {% for error in form.email.errors %}
+                                <p class="alert alert-danger">{{ error }}</p>
+                                {% endfor %}
+
+                                <div class="field">
+                                    <i class="fa fa-lock"></i>
+                                    {{ form.password }}
+                                </div>
+                                {% for error in form.password.errors %}
+                                <p class="alert alert-danger">{{ error }}</p>
+                                {% endfor %}
+
+                                <div class="mr-1 d-flex justify-content-between">
+                                    <div>
+                                        <input type="checkbox" class="checkbox-input" tabindex="0">
+                                        <label class="small">نمایش گذرواژه</label>
+                                    </div>
+                                    <div>
+                                        <a href="{% url 'accounts:password_reset' %}" class="small">رمز عبور خود را فراموش
+                                            کرده اید؟</a>
+                                    </div>
+
+                                </div>
+
+                                <div class="my-3">
+                                    <button class="btn custom-btn w-100">ورود</button>
+                                </div>
+                                <div class="pb-2 border-bottom">
+                                    <span class="small">حساب کاربری ندارید؟</span>
+                                    <a href="{% url 'accounts:register' %}" class="small">
+                                        عضویت در سایت
+                                    </a>
+                                </div>
+
+                            </form>
+                        
+                        <div class="">
+                            <p class="small text-center my-3">ورود از طریق حساب‌های کاربری دیگر</p>
+                            <div class="">
+
+                                <div class="social-accunt">
+
+                                    <form action="{% provider_login_url 'google' %}" method="post">
+                                        {% csrf_token %}
+                                        <button style="width: 33px;">
+                                                <img height="24" src="{% static 'image/google.svg' %}"
+                                                    class="d-block m-auto">
+                                        </button>
+
+                                    </form>
+                                    <form action="{% provider_login_url 'github' %}" method="post">
+                                        {% csrf_token %}
+                                        
+                                        <button>
+                                                <img height="24" src="{% static 'image/github.svg' %}"
+                                                    class="d-block m-auto">
+
+                                        </button>
+                                    </form>
+
+
+                                    <a title="LinkedIn" class="" href="">
+                                        <img height="24" src="{% static 'image/linkedin.svg' %}" class="d-block m-auto">
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- <script>
+            let checkboxInput = document.querySelector('.checkbox-input')
+            let passwordInput = document.querySelector('.password-input')
+            let isHide = true
+            checkboxInput.addEventListener('click' , ()=>{
+                if(isHide){
+                    passwordInput.type = 'text'
+                    isHide = false
+                }else{
+                    passwordInput.type = 'password'
+                    isHide = true
+                }
+            })
+
+        </script> -->
+{% endblock contact %}
